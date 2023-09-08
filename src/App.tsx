@@ -1,11 +1,12 @@
-import React from 'react';
+import Main from "./Main";
+import { MantineProvider } from "@mantine/core";
 
-const App = () => {
+const App: React.FC = () => {
   return (
-    <div >
-      New app
-    </div>
+    <MantineProvider withGlobalStyles withNormalizeCSS>
+      <Main />
+    </MantineProvider>
   );
-}
+};
 
 export default App;
