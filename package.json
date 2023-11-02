@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@3d-dice/dice-box": "^1.0.10",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mantine/core": "^6.0.19",

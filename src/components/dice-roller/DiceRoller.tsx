@@ -3,6 +3,11 @@ import { Modal, Group, Button, Box } from "@mantine/core";
 import styled from "@emotion/styled";
 import { SkillList } from "../../general/interfaces/Skill";
 
+import DiceBox from "@3d-dice/dice-box";
+// const diceBoxLib = require("@3d-dice/dice-box");
+// console.log(diceBoxLib);
+// const { DiceBox } = diceBoxLib;
+
 // https://github.com/3d-dice/dice-box
 
 type DiceStatus = "initial" | "rolling" | "done";
@@ -14,12 +19,13 @@ interface DiceState {
 const DiceRoller: React.FC = () => {
   const [opened, setOpened] = React.useState(false);
   const [canCloseDialog, setCanCloseDialog] = React.useState(false);
+  const [diceBox, setDiceBox] = React.useState<any>(null);
   const [diceState, setDiceState] = React.useState<DiceState>({
     status: "initial",
     number: 20,
   });
   const { status, number } = diceState;
-
+  const diceBoxRef = React.useRef(null);
   const titleText = "Stranger: take a closer look at the powered-up console.";
   const skill = SkillList[0];
   const difficultyClass: number = 10;
@@ -27,7 +33,35 @@ const DiceRoller: React.FC = () => {
   const classUppercase: string = "class".toUpperCase();
   const sides: number = 20;
 
+  React.useEffect(() => {
+    console.log("hej", diceBoxRef.current);
+    if (diceBoxRef.current) {
+      const box = new DiceBox("#dice-box", {
+        assetPath: "/assets/",
+        id: "dice-canvas",
+        scale: 14,
+      });
+      console.log("Setting dicebox");
+      setDiceBox(box);
+    }
+  }, [diceBoxRef]);
+
   const rollDice = () => {
+    console.log("Using dicebox");
+    console.log(diceBox);
+    // const box = new DiceBox("#dice-box", {
+    //   assetPath: "/assets/",
+    //   id: "dice-canvas",
+    //   scale: 14,
+    // });
+    // box.init().then(() => {
+    //   box.roll("1d20");
+    // });
+    diceBox &&
+      diceBox.init().then(() => {
+        diceBox.roll("1d20");
+      });
+
     setDiceState({ ...diceState, status: "rolling" });
     setTimeout(() => {
       const diceNumber = Math.floor(Math.random() * sides) + 1;
@@ -97,6 +131,11 @@ const DiceRoller: React.FC = () => {
           <div>{difficultyClass}</div>
         </ContentContainer>
         <ContentContainer>
+          <Box
+            ref={diceBoxRef}
+            id="dice-box"
+            sx={{ height: "200px", width: "200px", backgroundColor: "grey" }}
+          ></Box>
           {status === "done" && renderDiceInformation()}
           <Button onClick={rollDice} disabled={status !== "initial"}>
             Roll
